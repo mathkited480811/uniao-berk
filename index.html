@@ -1,0 +1,254 @@
+<DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIÃO BERK - Oficial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #050509;
+            --card-bg: #101018;
+            --text-main: #ffffff;
+            --text-muted: #8b8b9a;
+            --accent-purple: #9d4edd;
+            --accent-pink: #ff0054;
+            --border-color: #1f1f2e;
+            --success-green: #00e676;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { 
+            background-color: var(--bg-color); 
+            background-size: cover; 
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main); 
+            padding: 20px; 
+            transition: 0.3s;
+        }
+
+        /* --- UI PRINCIPAL (Baseada no vídeo) --- */
+        .header { display: flex; align-items: center; margin-bottom: 25px; position: relative; }
+        .logo-img { width: 75px; height: 75px; border-radius: 18px; border: 2px solid var(--accent-purple); object-fit: cover; }
+        .admin-trigger { position: absolute; top: 0; right: 0; color: var(--text-muted); font-size: 22px; cursor: pointer; padding: 5px; }
+
+        .social-links { display: flex; gap: 10px; margin-bottom: 25px; }
+        .btn-social { flex: 1; padding: 12px; border-radius: 12px; text-decoration: none; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; background: var(--card-bg); border: 1px solid var(--border-color); }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .stat-card { background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1px solid var(--border-color); }
+        .stat-val { font-size: 22px; font-weight: bold; display: block; }
+        .stat-lab { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+
+        .section-title { color: cyan; font-size: 13px; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .main-card { background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color); margin-bottom: 15px; }
+        .card-body { padding: 15px; }
+        .btn-join { display: block; width: 100%; padding: 12px; background: #1a1a24; border: 1px solid var(--border-color); color: white; text-align: center; text-decoration: none; border-radius: 10px; margin-top: 10px; font-weight: bold; }
+
+        .owner-item { background: var(--card-bg); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid var(--border-color); flex: 1; }
+
+        /* --- PAINEL ADMIN & LOGIN (Acesso Restrito) --- */
+        #adminModal, #dashboardPanel { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; padding: 20px; overflow-y: auto; 
+        }
+
+        .glass-box { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid var(--accent-purple); width: 100%; max-width: 500px; margin: auto; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid var(--border-color); color: #fff; border-radius: 8px; }
+        .btn-save { background: var(--accent-purple); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+
+        .tab-btn { background: #1a1a24; color: white; border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; margin-right: 5px; cursor: pointer; }
+        .tab-content { display: none; margin-top: 20px; }
+        .tab-content.active { display: block; }
+
+        label { font-size: 12px; color: var(--accent-purple); font-weight: bold; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body id="bodyMain">
+
+    <div class="header">
+        <i class="fas fa-cog admin-trigger" onclick="openLogin()"></i>
+        <img src="https://via.placeholder.com/100" class="logo-img" id="siteLogo">
+        <div style="margin-left: 15px;">
+            <h1 id="displayTitle">UNIÃO BERK</h1>
+            <p id="displaySlogan" style="font-size: 12px; color: var(--text-muted);">Lealdade é a palavra que nos guia!</p>
+        </div>
+    </div>
+
+    <div class="social-links">
+        <a id="linkWppTop" href="https://wa.me/447347721490" class="btn-social"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+        <a id="linkDiscord" href="https://discord.gg/qfRnsfb4s" class="btn-social" style="color:#5865F2;"><i class="fab fa-discord"></i> Discord</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><span class="stat-val">1</span><span class="stat-lab">Grupo Ativo</span></div>
+        <div class="stat-card"><span class="stat-val">1.737</span><span class="stat-lab">Visitas</span></div>
+    </div>
+
+    <div class="section-title">Grupos & Canais</div>
+    <div id="linksContainer"></div> <div class="section-title" style="color: #54a0ff;">Donos & Parceiros</div>
+    <div style="display: flex; gap: 10px;">
+        <div class="owner-item">
+            <div style="font-weight: bold;">yukki</div>
+            <span style="font-size: 10px; color: #54a0ff;">ADM</span>
+        </div>
+        <div class="owner-item">
+            <div style="font-weight: bold;">math</div>
+            <span style="font-size: 10px; color: var(--accent-pink);">DONO</span>
+        </div>
+    </div>
+
+    <footer style="margin-top: 40px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 20px;">
+        <p style="font-size: 11px; color: var(--text-muted);">©2026 UNIÃO BERK</p>
+        <a id="helpLink" href="https://wa.me/639756218678" style="color: var(--success-green); text-decoration: none; font-size: 13px;">Central de Ajuda</a>
+    </footer>
+
+    <div id="adminModal" style="display: none; align-items: center; justify-content: center;">
+        <div class="glass-box">
+            <h2 style="text-align: center; margin-bottom: 20px; color: var(--accent-pink);">ACESSO RESTRITO</h2>
+            <input type="text" id="userInput" placeholder="Usuário">
+            <input type="password" id="passInput" placeholder="Senha">
+            <button class="btn-save" onclick="checkLogin()">ENTRAR NO PAINEL</button>
+            <button onclick="closeModals()" style="background: none; border: none; color: grey; width: 100%; margin-top: 15px;">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="dashboardPanel">
+        <div class="glass-box" style="max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Dashboard Admin</h3>
+                <button onclick="logout()" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px;">Sair</button>
+            </div>
+
+            <div style="display: flex; overflow-x: auto; padding-bottom: 10px;">
+                <button class="tab-btn" onclick="openTab('editSite')">Editar Site</button>
+                <button class="tab-btn" onclick="openTab('puxada')">Puxada/Ban</button>
+                <button class="tab-btn" onclick="openTab('stats')">Gráficos</button>
+            </div>
+
+            <div id="editSite" class="tab-content active">
+                <label>Foto de Fundo (Link da imagem):</label>
+                <input type="text" id="editBg" placeholder="https://...">
+                
+                <label>Foto de Perfil/Logo (Link):</label>
+                <input type="text" id="editLogo" placeholder="https://...">
+
+                <label>Links (Formato: Nome|Link , separe por vírgula):</label>
+                <textarea id="editLinks" rows="3" placeholder="Grupo Berk|https://chat..., Canal Berk|https://wa..."></textarea>
+
+                <label>Número WhatsApp Topo (+44...):</label>
+                <input type="text" id="editWppTop" placeholder="447347721490">
+
+                <label>Número Central Ajuda (+63...):</label>
+                <input type="text" id="editHelp" placeholder="639756218678">
+
+                <button class="btn-save" onclick="saveAdminData()">SALVAR TUDO AGORA</button>
+            </div>
+
+            <div id="puxada" class="tab-content">
+                <div style="background: #000; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h4>Puxada de Dados</h4>
+                    <input type="text" placeholder="Digite CPF ou Número">
+                    <button class="btn-save" style="margin-top: 5px; padding: 8px;">Consultar API</button>
+                </div>
+                <div style="background: #000; padding: 15px; border-radius: 10px; border: 1px solid red;">
+                    <h4>Banir Número (WhatsApp)</h4>
+                    <input type="text" id="banTarget" placeholder="+55...">
+                    <button class="btn-save" style="background: red; margin-top: 5px; padding: 8px;" onclick="alert('Solicitação enviada para a API!')">BANIR AGORA</button>
+                </div>
+            </div>
+
+            <div id="stats" class="tab-content">
+                <div style="height: 250px; background: #000; padding: 10px; border-radius: 10px;">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const myUser = "mathkited.#";
+        const myPass = "480811$";
+
+        // Inicialização e Carregamento
+        window.onload = function() {
+            const saved = JSON.parse(localStorage.getItem('berk_settings')) || {
+                bg: "", logo: "https://via.placeholder.com/100", wppTop: "447347721490", help: "639756218678", links: "Grupo Berk|https://chat.whatsapp.com/exemplo, Canal Berk|https://whatsapp.com/channel/exemplo"
+            };
+            applySettings(saved);
+        };
+
+        function applySettings(data) {
+            if(data.bg) document.body.style.backgroundImage = `url('${data.bg}')`;
+            document.getElementById('siteLogo').src = data.logo;
+            document.getElementById('linkWppTop').href = `https://wa.me/${data.wppTop}`;
+            document.getElementById('helpLink').href = `https://wa.me/${data.help}`;
+            
+            // Gerar Botões de Links
+            const container = document.getElementById('linksContainer');
+            container.innerHTML = "";
+            const parts = data.links.split(',');
+            parts.forEach(p => {
+                const [nome, url] = p.split('|');
+                if(nome && url) {
+                    const div = document.createElement('div');
+                    div.className = "main-card";
+                    div.innerHTML = `<div class="card-body"><h3>${nome.trim()}</h3><a href="${url.trim()}" class="btn-join">Acessar</a></div>`;
+                    container.appendChild(div);
+                }
+            });
+
+            // Preencher campos do painel
+            document.getElementById('editBg').value = data.bg;
+            document.getElementById('editLogo').value = data.logo;
+            document.getElementById('editWppTop').value = data.wppTop;
+            document.getElementById('editHelp').value = data.help;
+            document.getElementById('editLinks').value = data.links;
+        }
+
+        function saveAdminData() {
+            const config = {
+                bg: document.getElementById('editBg').value,
+                logo: document.getElementById('editLogo').value,
+                wppTop: document.getElementById('editWppTop').value,
+                help: document.getElementById('editHelp').value,
+                links: document.getElementById('editLinks').value
+            };
+            localStorage.setItem('berk_settings', JSON.stringify(config));
+            applySettings(config);
+            alert("✅ Site atualizado com sucesso!");
+        }
+
+        // Sistema de Login e Painel
+        function openLogin() { document.getElementById('adminModal').style.display = 'flex'; }
+        function closeModals() { document.getElementById('adminModal').style.display = 'none'; }
+        function logout() { location.reload(); }
+
+        function checkLogin() {
+            if(document.getElementById('userInput').value === myUser && document.getElementById('passInput').value === myPass) {
+                document.getElementById('adminModal').style.display = 'none';
+                document.getElementById('dashboardPanel').style.display = 'block';
+                renderChart();
+            } else { alert("Acesso Negado!"); }
+        }
+
+        function openTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr'],
+                    datasets: [{ label: 'Visitas', data: [500, 800, 1200, 1737], borderColor: '#9d4edd', tension: 0.3 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+</body>
+</html>
